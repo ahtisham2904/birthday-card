@@ -20,10 +20,13 @@
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         html {
             font-size: 16px;
+            height: 100%;
         }
 
         body {
@@ -37,6 +40,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            width: 100vw;
             -webkit-tap-highlight-color: transparent;
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 20%),
@@ -45,8 +49,10 @@
         }
 
         .luxury-card {
-            width: 95%;
+            width: 95vw;
             max-width: 600px;
+            min-height: 90vh;
+            max-height: 95vh;
             background: linear-gradient(145deg, rgba(102,2,60,0.8) 0%, rgba(0,0,0,0.9) 100%);
             border-radius: 20px;
             padding: 1.5rem;
@@ -56,11 +62,11 @@
             overflow: hidden;
             border: 1px solid var(--gold);
             z-index: 1;
-            transition: opacity 0.5s ease, transform 0.3s ease;
+            transition: opacity 0.5s ease;
             margin: 1rem;
-            display: grid;
-            grid-template-rows: auto auto 1fr auto;
-            grid-gap: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .luxury-card.hidden {
@@ -143,7 +149,7 @@
 
         .card-header h1 {
             font-family: var(--font-display);
-            font-size: 2.2rem;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
             color: var(--gold);
             margin-bottom: 1rem;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
@@ -157,8 +163,8 @@
         }
 
         .main-image {
-            width: 200px;
-            height: 200px;
+            width: clamp(150px, 40vw, 200px);
+            height: clamp(150px, 40vw, 200px);
             margin: 1.5rem auto;
             border-radius: 10px;
             border: 2px solid var(--gold);
@@ -173,7 +179,7 @@
         }
 
         .btn {
-            padding: 1rem 2rem;
+            padding: 1rem 1.8rem;
             border-radius: 50px;
             border: none;
             font-family: var(--font-sans);
@@ -183,9 +189,8 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            min-width: 150px;
-            min-height: 50px;
-            font-size: 1rem;
+            min-width: 140px;
+            font-size: clamp(0.9rem, 3vw, 1rem);
             touch-action: manipulation;
         }
 
@@ -218,26 +223,24 @@
         .button-group {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 1rem;
             margin-top: 2rem;
-            width: 100%;
+            position: relative;
+            min-height: 50px;
             flex-wrap: wrap;
-            transition: all 0.3s ease;
         }
 
         .gallery {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            margin: 0 auto;
+            margin: 1rem auto;
             max-width: 90%;
-            transition: all 0.3s ease;
         }
 
         .gallery img {
             width: 100%;
-            height: 150px;
+            height: clamp(100px, 20vh, 150px);
             border-radius: 10px;
             border: 2px solid var(--gold);
             transition: transform 0.3s ease;
@@ -261,7 +264,7 @@
 
         .message {
             font-family: var(--font-script);
-            font-size: 1.4rem;
+            font-size: clamp(1.2rem, 4vw, 1.4rem);
             color: var(--rose-gold);
             margin: 1.5rem 0;
             line-height: 1.5;
@@ -277,6 +280,7 @@
             margin: 1.5rem 0;
             line-height: 1.6;
             padding: 0 1rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
         }
 
         /* Celebration effect */
@@ -349,7 +353,7 @@
             text-align: center;
             border: 1px solid var(--gold);
             max-width: 90%;
-            width: 90%;
+            width: clamp(300px, 90vw, 500px);
             animation: dialogPulse 0.5s infinite alternate;
         }
 
@@ -360,7 +364,7 @@
 
         .dialog p {
             font-family: var(--font-script);
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             color: var(--gold);
             margin: 0 0 20px;
         }
@@ -376,6 +380,7 @@
             cursor: pointer;
             transition: all 0.3s;
             touch-action: manipulation;
+            font-size: clamp(0.9rem, 3vw, 1rem);
         }
 
         .close-btn:hover {
@@ -383,79 +388,33 @@
             transform: scale(1.05);
         }
 
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
+        /* Mobile Optimizations */
+        @media (max-width: 600px) {
             .luxury-card {
-                width: 90%;
-                padding: 1.2rem;
-            }
-
-            .card-header h1 {
-                font-size: 2rem !important;
-            }
-
-            .message {
-                font-size: 1.3rem !important;
-            }
-
-            .main-image {
-                width: 180px !important;
-                height: 180px !important;
+                padding: 1rem;
+                min-height: 95vh;
+                max-height: 100vh;
+                width: 98vw;
             }
 
             .button-group {
-                flex-direction: row;
-                flex-wrap: wrap;
+                gap: 0.5rem;
             }
 
             .btn {
                 min-width: 120px;
-                padding: 0.9rem 1.5rem !important;
+                padding: 0.8rem 1.2rem;
             }
         }
 
-        @media (max-width: 480px) {
-            .luxury-card {
-                width: 95%;
-                padding: 1rem;
-            }
-
-            .card-header h1 {
-                font-size: 1.8rem !important;
-            }
-
-            .message {
-                font-size: 1.2rem !important;
-            }
-
-            .main-image {
-                width: 160px !important;
-                height: 160px !important;
-            }
-
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 200px;
-                margin: 0.5rem 0;
-            }
-
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 350px) {
+        @media (max-width: 400px) {
             .button-group {
                 flex-direction: column;
             }
             
             .btn {
                 width: 100%;
+                max-width: 200px;
             }
         }
 
@@ -788,20 +747,6 @@
             setTimeout(() => {
                 window.location.reload();
             }, 300);
-        });
-
-        // Handle window resize for consistent layout
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                // Reset button positions on resize
-                const rejectBtn = document.getElementById('rejectBtn');
-                rejectBtn.style.position = '';
-                rejectBtn.style.left = '';
-                rejectBtn.style.top = '';
-                rejectBtn.style.transform = '';
-            }, 250);
         });
 
         // Initial effects
