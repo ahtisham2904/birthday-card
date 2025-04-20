@@ -51,7 +51,7 @@
         .luxury-card {
             width: 95vw;
             max-width: 600px;
-            min-height: 90vh;
+            min-height: auto; /* Changed from 90vh to auto */
             max-height: 95vh;
             background: linear-gradient(145deg, rgba(102,2,60,0.8) 0%, rgba(0,0,0,0.9) 100%);
             border-radius: 20px;
@@ -59,7 +59,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto; /* Changed to auto to allow scrolling */
             border: 1px solid var(--gold);
             z-index: 1;
             transition: opacity 0.5s ease;
@@ -228,6 +228,7 @@
             position: relative;
             min-height: 50px;
             flex-wrap: wrap;
+            padding-bottom: 20px; /* Added padding to ensure buttons are visible */
         }
 
         .gallery {
@@ -240,7 +241,7 @@
 
         .gallery img {
             width: 100%;
-            height: clamp(100px, 20vh, 150px);
+            height: clamp(80px, 15vh, 120px); /* Reduced height */
             border-radius: 10px;
             border: 2px solid var(--gold);
             transition: transform 0.3s ease;
@@ -277,7 +278,7 @@
         }
 
         .content-text {
-            margin: 1.5rem 0;
+            margin: 1rem 0; /* Reduced margin */
             line-height: 1.6;
             padding: 0 1rem;
             font-size: clamp(0.9rem, 3vw, 1rem);
@@ -392,18 +393,38 @@
         @media (max-width: 600px) {
             .luxury-card {
                 padding: 1rem;
-                min-height: 95vh;
-                max-height: 100vh;
+                min-height: auto; /* Changed from 95vh to auto */
+                max-height: 90vh; /* Reduced from 100vh */
                 width: 98vw;
+                overflow-y: auto; /* Ensure scrolling is enabled */
             }
 
             .button-group {
                 gap: 0.5rem;
+                margin-top: 1rem; /* Reduced margin */
+                position: sticky;
+                bottom: 0;
+                background: linear-gradient(transparent, rgba(102,2,60,0.8));
+                padding: 10px 0;
             }
 
             .btn {
                 min-width: 120px;
                 padding: 0.8rem 1.2rem;
+            }
+
+            .main-image {
+                margin: 1rem auto; /* Reduced margin */
+                width: clamp(120px, 35vw, 180px);
+                height: clamp(120px, 35vw, 180px);
+            }
+
+            .gallery img {
+                height: clamp(70px, 12vh, 100px); /* Further reduced height */
+            }
+
+            .message, .content-text {
+                margin: 1rem 0; /* Reduced margins */
             }
         }
 
@@ -415,6 +436,10 @@
             .btn {
                 width: 100%;
                 max-width: 200px;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr; /* Single column on very small screens */
             }
         }
 
@@ -485,7 +510,7 @@
         <p>🎂 Chalo ab zra sidha tarika sa btao? 😂</p>
         <p>😋 Oye 🐒</p>
         <p>😎😎 Cake kab khila rahi ho? 😎😎</p>
-        <p>😏 Jaldi btao Time nai ha mra pass. 😏</p>
+        <p>😏 Khilao gi t kha loo ga. 😏</p>
         <button class="close-btn" onclick="closeDialog()">Close</button>
     </div>
 
