@@ -1,183 +1,677 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>HBD love</title>	    
-    <link type="text/css" rel="stylesheet" href="./file/default.css">
-    <script type="text/javascript" src="./file/jquery.min.js"></script>
-    <script type="text/javascript" src="./file/jscex.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-parser.js"></script>
-    <script type="text/javascript" src="./file/jscex-jit.js"></script>
-    <script type="text/javascript" src="./file/jscex-builderbase.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-async.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-async-powerpack.min.js"></script>
-    <script type="text/javascript" src="./file/functions.js" charset="utf-8"></script>
-    <script type="text/javascript" src="./file/love.js" charset="utf-8"></script>
-    <script>
-        function playAudio() {
-            var audio = document.getElementById("myAudio");
-            audio.play();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#1e3c72">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Hisaab Kitaab - Pakistani Income Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-    </script>
+        
+        body {
+            background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 4px;
+        }
+        
+        .sub {
+            color: #2c3e66;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .profit-panel {
+            background: linear-gradient(135deg, #f6f9fc, #edf2f9);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .profit-label {
+            font-weight: 700;
+            color: #1f3a5f;
+            font-size: 1rem;
+        }
+        
+        .profit-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        .profit-positive {
+            color: #059669;
+        }
+        
+        .profit-negative {
+            color: #dc2626;
+        }
+        
+        .input-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #1e293b;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 20px;
+            border: 1.5px solid #e2e8f0;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+        
+        .type-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .type-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            background: #f1f5f9;
+            color: #334155;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .type-btn.active {
+            background: #1e3a8a;
+            color: white;
+            transform: scale(0.98);
+        }
+        
+        .type-btn.kharcha.active { background: #dc2626; }
+        .type-btn.kamaai.active { background: #059669; }
+        
+        .add-btn {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+        
+        .add-btn:active {
+            transform: scale(0.97);
+        }
+        
+        .entries-list {
+            max-height: 450px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .entry-item {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        
+        .entry-item:active {
+            transform: scale(0.99);
+        }
+        
+        .entry-kharcha { border-left-color: #dc2626; }
+        .entry-kamaai { border-left-color: #059669; }
+        
+        .entry-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+        
+        .entry-amount {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        
+        .entry-meta {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+        
+        .delete-btn {
+            background: rgba(220, 38, 38, 0.1);
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #dc2626;
+            padding: 10px 14px;
+            border-radius: 30px;
+            transition: all 0.2s;
+            min-width: 44px;
+        }
+        
+        .delete-btn:active {
+            background: rgba(220, 38, 38, 0.2);
+            transform: scale(0.95);
+        }
+        
+        .empty-msg {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+        
+        hr {
+            margin: 16px 0;
+            border-color: #e2e8f0;
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            padding: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+        
+        .danger-btn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .current-datetime {
+            background: #e0e7ff;
+            padding: 10px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: #1e3a8a;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .card { padding: 16px; }
+            .profit-value { font-size: 1.5rem; }
+            .type-btn { padding: 10px; font-size: 0.85rem; }
+        }
+        
+        .entries-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .entries-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .entries-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            pointer-events: none;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="main">
-        <div id="error"><a href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a> (<a href="http://firefox.com.cn/download/">Firefox</a>)</div>
-        <audio autoplay="autoplay" height="100" width="100" id="myAudio">
-            <source src="aud.mp3" type="audio/mp3" />
-            <embed height="100" width="100" src="aud.mp3" />
-        </audio>
-        <div id="wrap">
-            <div id="text">
-                <div id="code">
-                    <span class="say">Wishing the most wonderful sister in the world a day filled with love, laughter, and all the happiness you deserve! 🥳💖</span><br>
-                    <span class="say">You’re not just my sister—you’re my best friend, the one who always knows how to make me smile. Thank you for all the unforgettable memories we’ve shared together.</span><br>
-                    <span class="say">May this year bring you endless joy, success in everything you do, and all your dreams come true! 🎁✨</span><br>
-                    <span class="say">Love you to the moon and back! ❤️</span><br>
-                    <span class="say">My Sister (Baghal wali Sarkar) 😁💞</span><br>
-                    <span class="say">Happy Birthday! 🎊 💕</span><br>
-                    <span class="say">May Allah bless you 🍀</span><br>
-                    <span class="say">And give u many happiness 💕</span><br>
-                    <span class="say">Hope u have a great day today ❤️😘</span><br>
-                </div>
+<div class="container">
+    <div class="card">
+        <h1>💰 Hisaab Kitaab</h1>
+        <div class="sub">Pakistan · Kharcha · Kamaai · Profit</div>
+        
+        <!-- Current Date & Time Display -->
+        <div class="current-datetime" id="currentDateTime">
+            📅 Loading...
+        </div>
+
+        <!-- Profit Display -->
+        <div class="profit-panel">
+            <span class="profit-label">📈 TOTAL PROFIT (PKR)</span>
+            <span class="profit-value" id="profitValue">Rs. 0</span>
+        </div>
+
+        <!-- Add Entry Form -->
+        <div class="input-group">
+            <label>💰 Amount (Pakistani Rupees)</label>
+            <input type="number" id="amountInput" placeholder="Enter amount in Rs." step="1" inputmode="numeric">
+        </div>
+
+        <div class="input-group">
+            <label>📂 Transaction Type</label>
+            <div class="type-buttons">
+                <div class="type-btn kharcha" data-type="kharcha">💸 Kharcha (Expense)</div>
+                <div class="type-btn kamaai" data-type="kamaai">🌟 Kamaai (Income)</div>
             </div>
-            <div id="clock-box">
-                <span id="clock">577 days 0 hours 0 minutes 0 seconds</span> <!-- Change to "6940 days..." if needed -->
-            </div>
-            <canvas id="canvas" width="1100" height="680"></canvas>
+        </div>
+
+        <div class="input-group">
+            <label>📅 Date & Time (Auto-filled)</label>
+            <input type="datetime-local" id="datetimeInput" readonly style="background-color: #f8fafc; cursor: pointer;">
+        </div>
+
+        <button class="add-btn" id="addEntryBtn">+ Add Entry</button>
+        
+        <div class="action-buttons">
+            <button class="action-btn" id="exportBtn">📤 Export Data</button>
+            <button class="action-btn danger-btn" id="clearAllBtn">🗑️ Clear All</button>
         </div>
     </div>
 
-    <script>
-    (function() {
-        var canvas = $('#canvas');
-		
-        if (!canvas[0].getContext) {
-            $("#error").show();
+    <!-- History Section -->
+    <div class="card">
+        <h3>📋 Transaction History</h3>
+        <div id="entriesContainer" class="entries-list">
+            <div class="empty-msg">No entries yet. Add your first transaction.</div>
+        </div>
+        <hr>
+        <div class="summary">
+            <span>💸 Total Kharcha: <strong id="totalKharcha">Rs. 0</strong></span>
+            <span>🌟 Total Kamaai: <strong id="totalKamaai">Rs. 0</strong></span>
+        </div>
+        <div class="summary">
+            <span>📊 Profit = Kamaai - Kharcha</span>
+            <span id="transactionCount" style="color: #64748b;">0 transactions</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Pakistani Rupees Version with Auto Date & Time
+    let transactions = [];
+    
+    // Function to update current date and time (Pakistan Time)
+    function updateCurrentDateTime() {
+        const now = new Date();
+        const options = {
+            timeZone: 'Asia/Karachi',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const pakistanTime = now.toLocaleString('en-PK', options);
+        document.getElementById('currentDateTime').innerHTML = `🇵🇰 Pakistan Time: ${pakistanTime}`;
+    }
+    
+    // Auto-update current time every second
+    setInterval(updateCurrentDateTime, 1000);
+    updateCurrentDateTime();
+    
+    // Get current datetime in local format for storage (no validation)
+    function getCurrentDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+    
+    // Auto-update the datetime input field every minute
+    function updateDateTimeInput() {
+        const dtInput = document.getElementById('datetimeInput');
+        dtInput.value = getCurrentDateTime();
+    }
+    
+    // Update every minute
+    setInterval(updateDateTimeInput, 60000);
+    updateDateTimeInput();
+    
+    // Load data from localStorage
+    function loadData() {
+        try {
+            const saved = localStorage.getItem("hisaab_kitaab_pk");
+            if (saved) {
+                transactions = JSON.parse(saved);
+                if (!Array.isArray(transactions)) transactions = [];
+            } else {
+                // Sample demo data with Pakistani context
+                const now = new Date();
+                transactions = [
+                    { id: Date.now() + 1, amount: 5000, type: "kamaai", datetime: getDefaultDateTime(-1) },
+                    { id: Date.now() + 2, amount: 1500, type: "kharcha", datetime: getDefaultDateTime(0) },
+                    { id: Date.now() + 3, amount: 8000, type: "kamaai", datetime: getDefaultDateTime(1) },
+                    { id: Date.now() + 4, amount: 2500, type: "kharcha", datetime: getDefaultDateTime(2) }
+                ];
+                saveData();
+            }
+        } catch (e) {
+            console.error("Error loading data:", e);
+            transactions = [];
+        }
+    }
+    
+    function getDefaultDateTime(offsetDays = 0) {
+        let d = new Date();
+        d.setDate(d.getDate() + offsetDays);
+        return d.toISOString().slice(0, 16);
+    }
+    
+    function saveData() {
+        try {
+            localStorage.setItem("hisaab_kitaab_pk", JSON.stringify(transactions));
+            updateTransactionCount();
+        } catch (e) {
+            showToast("Error saving data");
+        }
+    }
+    
+    function updateTransactionCount() {
+        const count = transactions.length;
+        document.getElementById("transactionCount").innerText = `${count} transaction${count !== 1 ? 's' : ''}`;
+    }
+    
+    function updateStats() {
+        let totalKharcha = 0;
+        let totalKamaai = 0;
+        transactions.forEach(t => {
+            if (t.type === "kharcha") totalKharcha += t.amount;
+            else if (t.type === "kamaai") totalKamaai += t.amount;
+        });
+        const profit = totalKamaai - totalKharcha;
+        document.getElementById("totalKharcha").innerHTML = `Rs. ${totalKharcha.toFixed(2)}`;
+        document.getElementById("totalKamaai").innerHTML = `Rs. ${totalKamaai.toFixed(2)}`;
+        const profitSpan = document.getElementById("profitValue");
+        profitSpan.innerHTML = `Rs. ${profit.toFixed(2)}`;
+        if (profit >= 0) {
+            profitSpan.className = "profit-value profit-positive";
+        } else {
+            profitSpan.className = "profit-value profit-negative";
+        }
+    }
+    
+    function renderTransactions() {
+        const container = document.getElementById("entriesContainer");
+        if (!transactions.length) {
+            container.innerHTML = `<div class="empty-msg">✨ No entries yet. Add your first transaction above.</div>`;
+            updateStats();
+            return;
+        }
+        
+        const sorted = [...transactions].sort((a,b) => new Date(b.datetime) - new Date(a.datetime));
+        container.innerHTML = "";
+        sorted.forEach(trans => {
+            const dateObj = new Date(trans.datetime);
+            const formattedDate = dateObj.toLocaleString('en-PK', { 
+                year: 'numeric', month: 'short', day: 'numeric', 
+                hour: '2-digit', minute: '2-digit'
+            });
+            const amountSign = trans.type === "kharcha" ? "- Rs." : "+ Rs.";
+            const amountClass = trans.type === "kharcha" ? "entry-kharcha" : "entry-kamaai";
+            const div = document.createElement("div");
+            div.className = `entry-item ${amountClass}`;
+            div.innerHTML = `
+                <div class="entry-details">
+                    <div class="entry-amount">${amountSign} ${trans.amount.toFixed(2)}</div>
+                    <div class="entry-meta">${formattedDate} • ${trans.type === "kharcha" ? "💸 Kharcha" : "🌟 Kamaai"}</div>
+                </div>
+                <button class="delete-btn" data-id="${trans.id}">🗑️</button>
+            `;
+            container.appendChild(div);
+        });
+        
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.getAttribute("data-id"));
+                deleteTransactionById(id);
+            });
+        });
+        updateStats();
+    }
+    
+    function deleteTransactionById(id) {
+        if (confirm("Delete this transaction?")) {
+            transactions = transactions.filter(t => t.id !== id);
+            saveData();
+            renderTransactions();
+            showToast("Transaction deleted");
+        }
+    }
+    
+    function addTransaction(amount, type, datetime) {
+        if (isNaN(amount) || amount <= 0) {
+            showToast("Please enter a valid amount greater than 0");
             return false;
         }
-
-        var width = canvas.width();
-        var height = canvas.height();        
-        canvas.attr("width", width);
-        canvas.attr("height", height);
-
-        var opts = {
-            seed: {
-                x: width / 2 - 20,
-                color: "rgb(190, 26, 37)",
-                scale: 2
-            },
-            branch: [
-                [535, 680, 570, 250, 500, 200, 30, 100, [
-                    [540, 500, 455, 417, 340, 400, 13, 100, [
-                        [450, 435, 434, 430, 394, 395, 2, 40]
-                    ]],
-                    [550, 445, 600, 356, 680, 345, 12, 100, [
-                        [578, 400, 648, 409, 661, 426, 3, 80]
-                    ]],
-                    [539, 281, 537, 248, 534, 217, 3, 40],
-                    [546, 397, 413, 247, 328, 244, 9, 80, [
-                        [427, 286, 383, 253, 371, 205, 2, 40],
-                        [498, 345, 435, 315, 395, 330, 4, 60]
-                    ]],
-                    [546, 357, 608, 252, 678, 221, 6, 100, [
-                        [590, 293, 646, 277, 648, 271, 2, 80]
-                    ]]
-                ]] 
-            ],
-            bloom: {
-                num: 700,
-                width: 1080,
-                height: 650,
-            },
-            footer: {
-                width: 1200,
-                height: 5,
-                speed: 10,
-            }
+        
+        // No date validation - accept whatever is there
+        const newTrans = {
+            id: Date.now(),
+            amount: parseFloat(amount),
+            type: type,
+            datetime: datetime || getCurrentDateTime() // Auto-fill if empty
+        };
+        transactions.push(newTrans);
+        saveData();
+        renderTransactions();
+        showToast(`${type === "kamaai" ? "🌟 Kamaai" : "💸 Kharcha"} added: Rs. ${amount}`);
+        return true;
+    }
+    
+    function clearAllData() {
+        if (confirm("⚠️ WARNING: This will delete ALL transactions. Are you sure?")) {
+            transactions = [];
+            saveData();
+            renderTransactions();
+            showToast("All data cleared");
         }
-
-        var tree = new Tree(canvas[0], width, height, opts);
-        var seed = tree.seed;
-        var foot = tree.footer;
-        var hold = 1;
-
-        canvas.click(function(e) {
-            playAudio();
-            var offset = canvas.offset(), x, y;
-            x = e.pageX - offset.left;
-            y = e.pageY - offset.top;
-            if (seed.hover(x, y)) {
-                hold = 0; 
-                canvas.unbind("click");
-                canvas.unbind("mousemove");
-                canvas.removeClass('hand');
+    }
+    
+    function exportData() {
+        if (transactions.length === 0) {
+            showToast("No data to export");
+            return;
+        }
+        
+        const exportData = {
+            exportDate: new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' }),
+            currency: "Pakistani Rupee (PKR)",
+            totalTransactions: transactions.length,
+            transactions: transactions,
+            summary: {
+                totalKharcha: transactions.filter(t => t.type === "kharcha").reduce((sum, t) => sum + t.amount, 0),
+                totalKamaai: transactions.filter(t => t.type === "kamaai").reduce((sum, t) => sum + t.amount, 0),
+                profit: transactions.filter(t => t.type === "kamaai").reduce((sum, t) => sum + t.amount, 0) - 
+                        transactions.filter(t => t.type === "kharcha").reduce((sum, t) => sum + t.amount, 0)
             }
-        }).mousemove(function(e) {
-            var offset = canvas.offset(), x, y;
-            x = e.pageX - offset.left;
-            y = e.pageY - offset.top;
-            canvas.toggleClass('hand', seed.hover(x, y));
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `hisaab_kitaab_pk_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+        
+        showToast("Data exported successfully");
+    }
+    
+    function showToast(message) {
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) existingToast.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 2000);
+    }
+    
+    let currentType = "kharcha";
+    
+    function setActiveType(type) {
+        currentType = type;
+        document.querySelectorAll(".type-btn").forEach(btn => {
+            const btnType = btn.getAttribute("data-type");
+            if (btnType === type) {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
         });
-
-        var seedAnimate = eval(Jscex.compile("async", function () {
-            seed.draw();
-            while (hold) {
-                $await(Jscex.Async.sleep(10));
+    }
+    
+    function init() {
+        loadData();
+        
+        document.querySelectorAll(".type-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const type = btn.getAttribute("data-type");
+                setActiveType(type);
+            });
+        });
+        
+        document.getElementById("addEntryBtn").addEventListener("click", () => {
+            const amount = document.getElementById("amountInput").value;
+            const datetime = document.getElementById("datetimeInput").value;
+            if (addTransaction(amount, currentType, datetime)) {
+                document.getElementById("amountInput").value = "";
+                // Keep the current auto datetime
+                document.getElementById("amountInput").focus();
             }
-            while (seed.canScale()) {
-                seed.scale(0.95);
-                $await(Jscex.Async.sleep(10));
+        });
+        
+        document.getElementById("clearAllBtn").addEventListener("click", clearAllData);
+        document.getElementById("exportBtn").addEventListener("click", exportData);
+        
+        setActiveType("kharcha");
+        renderTransactions();
+        
+        // Handle keyboard enter on amount input
+        document.getElementById("amountInput").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("addEntryBtn").click();
             }
-            while (seed.canMove()) {
-                seed.move(0, 2);
-                foot.draw();
-                $await(Jscex.Async.sleep(10));
-            }
-        }));
-
-        var growAnimate = eval(Jscex.compile("async", function () {
-            do {
-                tree.grow();
-                $await(Jscex.Async.sleep(10));
-            } while (tree.canGrow());
-        }));
-
-        var flowAnimate = eval(Jscex.compile("async", function () {
-            do {
-                tree.flower(2);
-                $await(Jscex.Async.sleep(10));
-            } while (tree.canFlower());
-        }));
-
-        var moveAnimate = eval(Jscex.compile("async", function () {
-            tree.snapshot("p1", 240, 0, 610, 680);
-            while (tree.move("p1", 500, 0)) {
-                foot.draw();
-                $await(Jscex.Async.sleep(10));
-            }
-            foot.draw();
-            tree.snapshot("p2", 500, 0, 610, 680);
-
-            canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-            canvas.css("background", "#ffe");
-            $await(Jscex.Async.sleep(300));
-            canvas.css("background", "none");
-        }));
-
-        var textAnimate = eval(Jscex.compile("async", function () {
-            $("#code").show().typewriter();
-        }));
-        var runAsync = eval(Jscex.compile("async", function () {
-            $await(seedAnimate());
-            $await(growAnimate());
-            $await(flowAnimate());
-            $await(moveAnimate());
-            textAnimate().start();
-        }));
-        runAsync().start();
-    })();
-    </script>
+        });
+    }
+    
+    init();
+</script>
 </body>
 </html>
