@@ -39,6 +39,10 @@ body::before{
   overflow:hidden;
 }
 
+/* slide top-fixed up to reveal form at top when amount is focused */
+.top-fixed{transition:transform .35s cubic-bezier(.4,0,.2,1);}
+.top-fixed.form-up{transform:translateY(var(--slide-up,0px));}
+
 /* ══════════════════════════════════════
    TOP FIXED ZONE
    (header + summary + profit bar + FORM)
@@ -608,6 +612,25 @@ function renderEntries(){
 /* keyboard */
 document.getElementById('aInp').addEventListener('keydown',e=>{if(e.key==='Enter')addEntry();});
 document.getElementById('meAmt').addEventListener('keydown',e=>{if(e.key==='Enter')saveEdit();});
+
+/* ── When amount box is tapped: slide the whole top-fixed block UP
+   so the "Naya Entry" form sits right at the top of the screen ── */
+document.getElementById('aInp').addEventListener('focus', () => {
+  const topFixed  = document.querySelector('.top-fixed');
+  const formWrap  = document.getElementById('formWrap');
+  // how far the top of formWrap is from the top of the viewport
+  const offset = formWrap.getBoundingClientRect().top;
+  // slide top-fixed up by that amount (minus a small padding)
+  const slideUp = offset - 8;
+  topFixed.style.setProperty('--slide-up', `-${slideUp}px`);
+  topFixed.classList.add('form-up');
+});
+
+/* Slide back down when user leaves the amount input */
+document.getElementById('aInp').addEventListener('blur', () => {
+  const topFixed = document.querySelector('.top-fixed');
+  topFixed.classList.remove('form-up');
+});
 
 render();
 </script>
