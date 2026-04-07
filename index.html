@@ -1,677 +1,615 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <meta name="theme-color" content="#1e3c72">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Hisaab Kitaab - Pakistani Income Manager</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
-            min-height: 100vh;
-            padding: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 4px;
-        }
-        
-        .sub {
-            color: #2c3e66;
-            margin-bottom: 20px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        
-        .profit-panel {
-            background: linear-gradient(135deg, #f6f9fc, #edf2f9);
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .profit-label {
-            font-weight: 700;
-            color: #1f3a5f;
-            font-size: 1rem;
-        }
-        
-        .profit-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-        
-        .profit-positive {
-            color: #059669;
-        }
-        
-        .profit-negative {
-            color: #dc2626;
-        }
-        
-        .input-group {
-            margin-bottom: 18px;
-        }
-        
-        label {
-            font-weight: 600;
-            color: #1e293b;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 20px;
-            border: 1.5px solid #e2e8f0;
-            font-size: 1rem;
-            background: white;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-        }
-        
-        .type-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .type-btn {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            border-radius: 40px;
-            font-weight: 700;
-            cursor: pointer;
-            background: #f1f5f9;
-            color: #334155;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        
-        .type-btn.active {
-            background: #1e3a8a;
-            color: white;
-            transform: scale(0.98);
-        }
-        
-        .type-btn.kharcha.active { background: #dc2626; }
-        .type-btn.kamaai.active { background: #059669; }
-        
-        .add-btn {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: white;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 8px;
-            font-family: inherit;
-        }
-        
-        .add-btn:active {
-            transform: scale(0.97);
-        }
-        
-        .entries-list {
-            max-height: 450px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .entry-item {
-            background: #f8fafc;
-            border-radius: 20px;
-            padding: 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 6px solid;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s;
-        }
-        
-        .entry-item:active {
-            transform: scale(0.99);
-        }
-        
-        .entry-kharcha { border-left-color: #dc2626; }
-        .entry-kamaai { border-left-color: #059669; }
-        
-        .entry-details {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-        }
-        
-        .entry-amount {
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-        
-        .entry-meta {
-            font-size: 0.7rem;
-            color: #64748b;
-        }
-        
-        .delete-btn {
-            background: rgba(220, 38, 38, 0.1);
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-            color: #dc2626;
-            padding: 10px 14px;
-            border-radius: 30px;
-            transition: all 0.2s;
-            min-width: 44px;
-        }
-        
-        .delete-btn:active {
-            background: rgba(220, 38, 38, 0.2);
-            transform: scale(0.95);
-        }
-        
-        .empty-msg {
-            text-align: center;
-            padding: 40px 20px;
-            color: #94a3b8;
-        }
-        
-        hr {
-            margin: 16px 0;
-            border-color: #e2e8f0;
-        }
-        
-        .summary {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            padding: 10px 0;
-            font-size: 0.9rem;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            background: #f1f5f9;
-            border: none;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            font-size: 0.85rem;
-        }
-        
-        .action-btn:active {
-            transform: scale(0.97);
-        }
-        
-        .danger-btn {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-        
-        .current-datetime {
-            background: #e0e7ff;
-            padding: 10px;
-            border-radius: 16px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-            color: #1e3a8a;
-            font-weight: 500;
-        }
-        
-        @media (max-width: 480px) {
-            body { padding: 12px; }
-            .card { padding: 16px; }
-            .profit-value { font-size: 1.5rem; }
-            .type-btn { padding: 10px; font-size: 0.85rem; }
-        }
-        
-        .entries-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .entries-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .entries-list::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            z-index: 1000;
-            animation: slideUp 0.3s ease;
-            pointer-events: none;
-        }
-        
-        @keyframes slideUp {
-            from {
-                transform: translateX(-50%) translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hisaab Kitaab</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0c1a;
+  --s1:#181727;--s2:#201f36;--s3:#2a2944;
+  --K:#00e5a0;--Kdim:rgba(0,229,160,.13);--Kmid:rgba(0,229,160,.28);
+  --X:#ff5f7e;--Xdim:rgba(255,95,126,.13);--Xmid:rgba(255,95,126,.28);
+  --P:#ffd166;--Pdim:rgba(255,209,102,.13);--Pmid:rgba(255,209,102,.32);
+  --txt:#fffffe;--muted:#8e8cac;--brd:#252440;
+  --r:16px;--rs:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:'Baloo Bhaijaan 2',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 0%,rgba(0,229,160,.08) 0%,transparent 100%),
+    radial-gradient(ellipse 60% 50% at 85% 100%,rgba(255,95,126,.07) 0%,transparent 100%);
+}
+
+/* ── ROOT LAYOUT ── */
+.root{
+  position:relative;z-index:1;
+  max-width:480px;width:100%;
+  margin:0 auto;
+  height:100vh;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+
+/* ══════════════════════════════════════
+   TOP FIXED ZONE
+   (header + summary + profit bar + FORM)
+   Never scrolls away
+══════════════════════════════════════ */
+.top-fixed{
+  flex-shrink:0;
+  background:var(--bg);
+  z-index:10;
+}
+
+/* ── header ── */
+.hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 10px;
+  border-bottom:1px solid var(--brd);
+}
+.brand{font-size:22px;font-weight:800;line-height:1}
+.bw{background:linear-gradient(135deg,#fff,#b0aed0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bg{background:linear-gradient(135deg,var(--K),var(--P));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-size:9px;color:var(--muted);margin-top:2px}
+.clock-box{text-align:right;font-family:'Space Mono',monospace}
+.c-time{font-size:17px;font-weight:700;color:var(--txt);letter-spacing:1px}
+.c-date{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ── 3 summary cards ── */
+.strip{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:8px;padding:12px 18px 0;
+}
+.sc{
+  background:var(--s1);border:1px solid var(--brd);
+  border-radius:14px;padding:10px 8px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px}
+.sc.K::before{background:var(--K)}
+.sc.X::before{background:var(--X)}
+.sc.P::before{background:var(--P)}
+.sc-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.sc-val{font-size:14px;font-weight:700;font-family:'Space Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc.K .sc-val{color:var(--K)}
+.sc.X .sc-val{color:var(--X)}
+.sc.P .sc-val{color:var(--P)}
+.sc-val.loss{color:var(--X)!important}
+
+/* ── net balance / profit bar ── */
+.pbar{
+  margin:10px 18px 0;
+  background:linear-gradient(135deg,var(--Pdim),var(--s2));
+  border:1px solid var(--Pmid);
+  border-radius:14px;padding:11px 16px;
+  display:flex;align-items:center;gap:12px;
+}
+.pb-ico{font-size:22px;flex-shrink:0}
+.pb-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+.pb-amt{font-size:20px;font-weight:800;font-family:'Space Mono',monospace;color:var(--P);line-height:1.1}
+.pb-amt.loss{color:var(--X)}
+.pb-note{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* ══════════════════════════════════════
+   ENTRY FORM — directly below net balance
+   Always visible, always in front
+══════════════════════════════════════ */
+.form-wrap{
+  margin:10px 18px 0;
+  background:var(--s1);
+  border:1.5px solid var(--brd);
+  border-radius:var(--r);
+  overflow:hidden;
+  /* glow that matches active type */
+  box-shadow:0 0 0 0 transparent;
+  transition:box-shadow .25s;
+}
+.form-wrap.gK{box-shadow:0 4px 28px rgba(0,229,160,.12),0 0 0 1px rgba(0,229,160,.2)}
+.form-wrap.gX{box-shadow:0 4px 28px rgba(255,95,126,.12),0 0 0 1px rgba(255,95,126,.2)}
+
+/* form top bar */
+.f-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;
+  border-bottom:1px solid var(--brd);
+  background:var(--s2);
+}
+.f-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.1px}
+.f-livebadge{
+  display:flex;align-items:center;gap:5px;
+  background:var(--s3);border:1px solid var(--brd);
+  border-radius:20px;padding:3px 10px;
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--K);
+}
+.dot{width:6px;height:6px;background:var(--K);border-radius:50%;animation:blink 1.2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* type toggle inside form */
+.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.tb{
+  height:48px;border:none;border-bottom:1px solid var(--brd);
+  background:var(--s2);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;
+  font-family:'Baloo Bhaijaan 2',sans-serif;font-size:16px;font-weight:800;
+  color:var(--muted);transition:all .2s;
+}
+.tb:first-child{border-right:1px solid var(--brd)}
+.tb.on-K{background:var(--Kdim);color:var(--K)}
+.tb.on-X{background:var(--Xdim);color:var(--X)}
+.tb:active{filter:brightness(.85)}
+
+/* amount input row */
+.f-body{padding:12px 14px}
+.amt-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.amt-box{
+  flex:1;display:flex;align-items:center;
+  background:var(--s2);border:2px solid var(--brd);
+  border-radius:var(--rs);overflow:hidden;
+  transition:border-color .2s;height:52px;
+}
+.amt-box.gK{border-color:var(--K)}
+.amt-box.gX{border-color:var(--X)}
+.amt-sym{padding:0 12px;font-size:18px;font-weight:700;color:var(--muted);font-family:'Space Mono',monospace;flex-shrink:0}
+.amt-inp{
+  flex:1;background:transparent;border:none;
+  color:var(--txt);font-family:'Space Mono',monospace;
+  font-size:22px;font-weight:700;outline:none;
+  padding:0 10px 0 0;min-width:0;height:100%;
+}
+.amt-inp::placeholder{color:var(--muted);opacity:.35;font-size:18px}
+
+/* datetime pill */
+.dt-pill{
+  background:var(--s3);border:1.5px solid var(--brd);
+  border-radius:var(--rs);padding:6px 12px;
+  text-align:center;flex-shrink:0;min-width:96px;
+}
+.dt-time{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--K)}
+.dt-date{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-top:1px}
+
+/* add button */
+.add-btn{
+  width:100%;height:50px;border:none;border-radius:var(--rs);
+  font-family:'Baloo Bhaijaan 2',sans-serif;font-size:17px;font-weight:800;
+  cursor:pointer;transition:all .2s;letter-spacing:.3px;
+}
+.add-btn:active{transform:scale(.97)}
+.add-btn.Ks{background:linear-gradient(135deg,var(--K),#00c48c);color:#081a12}
+.add-btn.Xs{background:linear-gradient(135deg,var(--X),#d93055);color:#fff}
+.add-btn.Ks:hover{box-shadow:0 6px 24px rgba(0,229,160,.3)}
+.add-btn.Xs:hover{box-shadow:0 6px 24px rgba(255,95,126,.3)}
+
+/* ══════════════════════════════════════
+   SCROLLABLE HISTORY (below form)
+══════════════════════════════════════ */
+.history{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:0 18px 24px;
+}
+.history::-webkit-scrollbar{width:3px}
+.history::-webkit-scrollbar-thumb{background:var(--brd);border-radius:3px}
+
+/* history header */
+.hist-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0 10px;
+  position:sticky;top:0;z-index:5;
+  background:var(--bg);
+}
+.hist-hd{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px}
+.cnt{background:var(--s3);border:1px solid var(--brd);border-radius:20px;padding:2px 9px;font-size:11px;color:var(--muted)}
+.clear-btn{background:var(--s2);border:1.5px solid var(--brd);border-radius:9px;color:var(--muted);font-size:12px;padding:5px 11px;cursor:pointer;font-family:'Baloo Bhaijaan 2',sans-serif;transition:all .18s}
+.clear-btn:hover{border-color:var(--X);color:var(--X);background:var(--Xdim)}
+
+/* filter chips */
+.fbar{display:flex;gap:7px;margin-bottom:12px;overflow-x:auto;padding-bottom:3px}
+.fbar::-webkit-scrollbar{display:none}
+.fc{background:var(--s2);border:1.5px solid var(--brd);border-radius:30px;padding:5px 13px;font-family:'Baloo Bhaijaan 2',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .18s}
+.fc.on{background:var(--Kdim);border-color:var(--K);color:var(--K)}
+.fc.xon{background:var(--Xdim);border-color:var(--X);color:var(--X)}
+
+/* date group */
+.dg{margin-bottom:18px}
+.dg-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dg-lbl{font-size:11px;font-weight:700;color:var(--muted);background:var(--s2);border:1px solid var(--brd);border-radius:20px;padding:3px 11px;white-space:nowrap}
+.dg-line{flex:1;height:1px;background:var(--brd)}
+.dg-net{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;white-space:nowrap}
+
+/* entry card */
+.ecard{
+  background:var(--s1);border:1px solid var(--brd);
+  border-radius:var(--r);padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:8px;position:relative;overflow:hidden;
+  transition:transform .15s;
+}
+.ecard:hover{transform:translateX(3px)}
+.ecard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.ecard.K::before{background:var(--K)}
+.ecard.X::before{background:var(--X)}
+.eico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.ecard.K .eico{background:var(--Kdim)}
+.ecard.X .eico{background:var(--Xdim)}
+.ebody{flex:1;min-width:0}
+.emeta{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace}
+.ebadge{font-size:9px;padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
+.ecard.K .ebadge{background:var(--Kdim);color:var(--K)}
+.ecard.X .ebadge{background:var(--Xdim);color:var(--X)}
+.eright{text-align:right;flex-shrink:0}
+.eamt{font-size:17px;font-weight:700;font-family:'Space Mono',monospace}
+.ecard.K .eamt{color:var(--K)}
+.ecard.X .eamt{color:var(--X)}
+.ebtn-row{display:flex;gap:4px;justify-content:flex-end;margin-top:6px}
+.ebtn{background:var(--s2);border:1px solid var(--brd);border-radius:7px;padding:3px 7px;cursor:pointer;font-size:12px;opacity:.25;transition:opacity .2s}
+.ecard:hover .ebtn{opacity:1}
+.ebtn:hover{background:var(--s3)}
+
+/* empty state */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.ei{font-size:48px;margin-bottom:10px;opacity:.3}
+
+/* EDIT MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.mbg.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--brd);border-radius:20px;padding:20px;width:100%;max-width:440px}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brd)}
+.mhdr span{font-size:17px;font-weight:800}
+.mclose{background:var(--s2);border:1px solid var(--brd);border-radius:9px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--muted)}
+.mtype-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.mtb{height:44px;border-radius:10px;border:2px solid var(--brd);background:var(--s2);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-family:'Baloo Bhaijaan 2',sans-serif;font-size:14px;font-weight:700;color:var(--muted);transition:all .18s}
+.mtb.on.K{border-color:var(--K);background:var(--Kdim);color:var(--K)}
+.mtb.on.X{border-color:var(--X);background:var(--Xdim);color:var(--X)}
+.ig{margin-bottom:11px}
+.lbl{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
+.mf{width:100%;background:var(--s2);border:1.5px solid var(--brd);border-radius:var(--rs);padding:11px 12px;color:var(--txt);font-family:'Baloo Bhaijaan 2',sans-serif;font-size:15px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.mf:focus{border-color:var(--K)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.msave{width:100%;padding:14px;border-radius:var(--rs);border:none;font-family:'Baloo Bhaijaan 2',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--K),#00bf87);color:#081a12;margin-top:4px}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--s3);border:1px solid var(--brd);border-radius:30px;padding:10px 22px;font-size:13px;z-index:400;white-space:nowrap;transition:transform .32s cubic-bezier(.25,1,.5,1);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <h1>💰 Hisaab Kitaab</h1>
-        <div class="sub">Pakistan · Kharcha · Kamaai · Profit</div>
-        
-        <!-- Current Date & Time Display -->
-        <div class="current-datetime" id="currentDateTime">
-            📅 Loading...
-        </div>
+<div class="root">
 
-        <!-- Profit Display -->
-        <div class="profit-panel">
-            <span class="profit-label">📈 TOTAL PROFIT (PKR)</span>
-            <span class="profit-value" id="profitValue">Rs. 0</span>
-        </div>
+  <!-- ══ TOP FIXED: header + stats + form ══ -->
+  <div class="top-fixed">
 
-        <!-- Add Entry Form -->
-        <div class="input-group">
-            <label>💰 Amount (Pakistani Rupees)</label>
-            <input type="number" id="amountInput" placeholder="Enter amount in Rs." step="1" inputmode="numeric">
-        </div>
-
-        <div class="input-group">
-            <label>📂 Transaction Type</label>
-            <div class="type-buttons">
-                <div class="type-btn kharcha" data-type="kharcha">💸 Kharcha (Expense)</div>
-                <div class="type-btn kamaai" data-type="kamaai">🌟 Kamaai (Income)</div>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label>📅 Date & Time (Auto-filled)</label>
-            <input type="datetime-local" id="datetimeInput" readonly style="background-color: #f8fafc; cursor: pointer;">
-        </div>
-
-        <button class="add-btn" id="addEntryBtn">+ Add Entry</button>
-        
-        <div class="action-buttons">
-            <button class="action-btn" id="exportBtn">📤 Export Data</button>
-            <button class="action-btn danger-btn" id="clearAllBtn">🗑️ Clear All</button>
-        </div>
+    <!-- header -->
+    <div class="hdr">
+      <div>
+        <div class="brand"><span class="bw">Hisaab </span><span class="bg">Kitaab</span></div>
+        <div class="sub">روزانہ آمدنی و خرچہ ٹریکر</div>
+      </div>
+      <div class="clock-box">
+        <div class="c-time" id="cTime">--:--:--</div>
+        <div class="c-date" id="cDate">-- --- ----</div>
+      </div>
     </div>
 
-    <!-- History Section -->
-    <div class="card">
-        <h3>📋 Transaction History</h3>
-        <div id="entriesContainer" class="entries-list">
-            <div class="empty-msg">No entries yet. Add your first transaction.</div>
-        </div>
-        <hr>
-        <div class="summary">
-            <span>💸 Total Kharcha: <strong id="totalKharcha">Rs. 0</strong></span>
-            <span>🌟 Total Kamaai: <strong id="totalKamaai">Rs. 0</strong></span>
-        </div>
-        <div class="summary">
-            <span>📊 Profit = Kamaai - Kharcha</span>
-            <span id="transactionCount" style="color: #64748b;">0 transactions</span>
-        </div>
+    <!-- 3 summary cards -->
+    <div class="strip">
+      <div class="sc K"><div class="sc-lbl">💚 Kamaai</div><div class="sc-val" id="totK">₨0</div></div>
+      <div class="sc X"><div class="sc-lbl">❤️ Kharcha</div><div class="sc-val" id="totX">₨0</div></div>
+      <div class="sc P"><div class="sc-lbl">✨ Profit</div><div class="sc-val" id="totP">₨0</div></div>
     </div>
+
+    <!-- net balance bar -->
+    <div class="pbar">
+      <div class="pb-ico" id="pbIco">⚖️</div>
+      <div>
+        <div class="pb-lbl">Net Balance — Kamaai minus Kharcha</div>
+        <div class="pb-amt" id="pbAmt">₨0</div>
+        <div class="pb-note" id="pbNote">Entry add karein shuru karne ke liye</div>
+      </div>
+    </div>
+
+    <!-- ══ ENTRY FORM — always here, always open ══ -->
+    <div class="form-wrap gK" id="formWrap">
+
+      <!-- top bar of form -->
+      <div class="f-topbar">
+        <div class="f-title">✏️ Naya Entry</div>
+        <div class="f-livebadge">
+          <span class="dot"></span>
+          <span id="badgeTime">--:--:--</span>
+        </div>
+      </div>
+
+      <!-- Kamaai / Kharcha toggle -->
+      <div class="type-toggle">
+        <button class="tb on-K" id="tbK" onclick="selType('K')">💚 Kamaai</button>
+        <button class="tb"      id="tbX" onclick="selType('X')">❤️ Kharcha</button>
+      </div>
+
+      <!-- amount + datetime pill -->
+      <div class="f-body">
+        <div class="amt-row">
+          <div class="amt-box gK" id="amtBox">
+            <span class="amt-sym">₨</span>
+            <input type="number" class="amt-inp" id="aInp" placeholder="Amount…" min="0" inputmode="decimal">
+          </div>
+          <div class="dt-pill">
+            <div class="dt-time" id="pillTime">--:--:--</div>
+            <div class="dt-date" id="pillDate">-- --- --</div>
+          </div>
+        </div>
+        <button class="add-btn Ks" id="addBtn" onclick="addEntry()">+ Kamaai Add Karein</button>
+      </div>
+
+    </div><!-- /form-wrap -->
+
+  </div><!-- /top-fixed -->
+
+  <!-- ══ SCROLLABLE HISTORY ══ -->
+  <div class="history" id="histArea">
+
+    <div class="hist-hdr">
+      <div class="hist-hd">Transactions <span class="cnt" id="cntBadge">0</span></div>
+      <button class="clear-btn" onclick="clearAll()">🗑️ Sab Mitao</button>
+    </div>
+
+    <div class="fbar">
+      <button class="fc on" onclick="setF('all',this)">🔢 Sab</button>
+      <button class="fc"    onclick="setF('K',this)">💚 Kamaai</button>
+      <button class="fc"    onclick="setF('X',this)">❤️ Kharcha</button>
+      <button class="fc"    onclick="setF('today',this)">📅 Aaj</button>
+      <button class="fc"    onclick="setF('week',this)">📆 Is Hafte</button>
+    </div>
+
+    <div id="eList"></div>
+
+  </div><!-- /history -->
+
+</div><!-- /root -->
+
+<!-- EDIT MODAL -->
+<div class="mbg" id="editBg" onclick="bgClick(event)">
+  <div class="modal">
+    <div class="mhdr">
+      <span>✏️ Entry Edit Karein</span>
+      <div class="mclose" onclick="closeModal()">✕</div>
+    </div>
+    <div class="mtype-row">
+      <button class="mtb on K" id="meK" onclick="setMT('K')">💚 Kamaai</button>
+      <button class="mtb"      id="meX" onclick="setMT('X')">❤️ Kharcha</button>
+    </div>
+    <div class="ig"><label class="lbl">Amount (₨)</label>
+      <input type="number" class="mf" id="meAmt" min="0" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700"></div>
+    <div class="two-col">
+      <div class="ig"><label class="lbl">Date</label><input type="date" class="mf" id="meDt"></div>
+      <div class="ig"><label class="lbl">Time</label><input type="time" class="mf" id="meTm"></div>
+    </div>
+    <button class="msave" onclick="saveEdit()">✅ Save Karein</button>
+  </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-    // Pakistani Rupees Version with Auto Date & Time
-    let transactions = [];
-    
-    // Function to update current date and time (Pakistan Time)
-    function updateCurrentDateTime() {
-        const now = new Date();
-        const options = {
-            timeZone: 'Asia/Karachi',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
-        const pakistanTime = now.toLocaleString('en-PK', options);
-        document.getElementById('currentDateTime').innerHTML = `🇵🇰 Pakistan Time: ${pakistanTime}`;
-    }
-    
-    // Auto-update current time every second
-    setInterval(updateCurrentDateTime, 1000);
-    updateCurrentDateTime();
-    
-    // Get current datetime in local format for storage (no validation)
-    function getCurrentDateTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-    
-    // Auto-update the datetime input field every minute
-    function updateDateTimeInput() {
-        const dtInput = document.getElementById('datetimeInput');
-        dtInput.value = getCurrentDateTime();
-    }
-    
-    // Update every minute
-    setInterval(updateDateTimeInput, 60000);
-    updateDateTimeInput();
-    
-    // Load data from localStorage
-    function loadData() {
-        try {
-            const saved = localStorage.getItem("hisaab_kitaab_pk");
-            if (saved) {
-                transactions = JSON.parse(saved);
-                if (!Array.isArray(transactions)) transactions = [];
-            } else {
-                // Sample demo data with Pakistani context
-                const now = new Date();
-                transactions = [
-                    { id: Date.now() + 1, amount: 5000, type: "kamaai", datetime: getDefaultDateTime(-1) },
-                    { id: Date.now() + 2, amount: 1500, type: "kharcha", datetime: getDefaultDateTime(0) },
-                    { id: Date.now() + 3, amount: 8000, type: "kamaai", datetime: getDefaultDateTime(1) },
-                    { id: Date.now() + 4, amount: 2500, type: "kharcha", datetime: getDefaultDateTime(2) }
-                ];
-                saveData();
-            }
-        } catch (e) {
-            console.error("Error loading data:", e);
-            transactions = [];
-        }
-    }
-    
-    function getDefaultDateTime(offsetDays = 0) {
-        let d = new Date();
-        d.setDate(d.getDate() + offsetDays);
-        return d.toISOString().slice(0, 16);
-    }
-    
-    function saveData() {
-        try {
-            localStorage.setItem("hisaab_kitaab_pk", JSON.stringify(transactions));
-            updateTransactionCount();
-        } catch (e) {
-            showToast("Error saving data");
-        }
-    }
-    
-    function updateTransactionCount() {
-        const count = transactions.length;
-        document.getElementById("transactionCount").innerText = `${count} transaction${count !== 1 ? 's' : ''}`;
-    }
-    
-    function updateStats() {
-        let totalKharcha = 0;
-        let totalKamaai = 0;
-        transactions.forEach(t => {
-            if (t.type === "kharcha") totalKharcha += t.amount;
-            else if (t.type === "kamaai") totalKamaai += t.amount;
-        });
-        const profit = totalKamaai - totalKharcha;
-        document.getElementById("totalKharcha").innerHTML = `Rs. ${totalKharcha.toFixed(2)}`;
-        document.getElementById("totalKamaai").innerHTML = `Rs. ${totalKamaai.toFixed(2)}`;
-        const profitSpan = document.getElementById("profitValue");
-        profitSpan.innerHTML = `Rs. ${profit.toFixed(2)}`;
-        if (profit >= 0) {
-            profitSpan.className = "profit-value profit-positive";
-        } else {
-            profitSpan.className = "profit-value profit-negative";
-        }
-    }
-    
-    function renderTransactions() {
-        const container = document.getElementById("entriesContainer");
-        if (!transactions.length) {
-            container.innerHTML = `<div class="empty-msg">✨ No entries yet. Add your first transaction above.</div>`;
-            updateStats();
-            return;
-        }
-        
-        const sorted = [...transactions].sort((a,b) => new Date(b.datetime) - new Date(a.datetime));
-        container.innerHTML = "";
-        sorted.forEach(trans => {
-            const dateObj = new Date(trans.datetime);
-            const formattedDate = dateObj.toLocaleString('en-PK', { 
-                year: 'numeric', month: 'short', day: 'numeric', 
-                hour: '2-digit', minute: '2-digit'
-            });
-            const amountSign = trans.type === "kharcha" ? "- Rs." : "+ Rs.";
-            const amountClass = trans.type === "kharcha" ? "entry-kharcha" : "entry-kamaai";
-            const div = document.createElement("div");
-            div.className = `entry-item ${amountClass}`;
-            div.innerHTML = `
-                <div class="entry-details">
-                    <div class="entry-amount">${amountSign} ${trans.amount.toFixed(2)}</div>
-                    <div class="entry-meta">${formattedDate} • ${trans.type === "kharcha" ? "💸 Kharcha" : "🌟 Kamaai"}</div>
-                </div>
-                <button class="delete-btn" data-id="${trans.id}">🗑️</button>
-            `;
-            container.appendChild(div);
-        });
-        
-        document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const id = parseInt(btn.getAttribute("data-id"));
-                deleteTransactionById(id);
-            });
-        });
-        updateStats();
-    }
-    
-    function deleteTransactionById(id) {
-        if (confirm("Delete this transaction?")) {
-            transactions = transactions.filter(t => t.id !== id);
-            saveData();
-            renderTransactions();
-            showToast("Transaction deleted");
-        }
-    }
-    
-    function addTransaction(amount, type, datetime) {
-        if (isNaN(amount) || amount <= 0) {
-            showToast("Please enter a valid amount greater than 0");
-            return false;
-        }
-        
-        // No date validation - accept whatever is there
-        const newTrans = {
-            id: Date.now(),
-            amount: parseFloat(amount),
-            type: type,
-            datetime: datetime || getCurrentDateTime() // Auto-fill if empty
-        };
-        transactions.push(newTrans);
-        saveData();
-        renderTransactions();
-        showToast(`${type === "kamaai" ? "🌟 Kamaai" : "💸 Kharcha"} added: Rs. ${amount}`);
-        return true;
-    }
-    
-    function clearAllData() {
-        if (confirm("⚠️ WARNING: This will delete ALL transactions. Are you sure?")) {
-            transactions = [];
-            saveData();
-            renderTransactions();
-            showToast("All data cleared");
-        }
-    }
-    
-    function exportData() {
-        if (transactions.length === 0) {
-            showToast("No data to export");
-            return;
-        }
-        
-        const exportData = {
-            exportDate: new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' }),
-            currency: "Pakistani Rupee (PKR)",
-            totalTransactions: transactions.length,
-            transactions: transactions,
-            summary: {
-                totalKharcha: transactions.filter(t => t.type === "kharcha").reduce((sum, t) => sum + t.amount, 0),
-                totalKamaai: transactions.filter(t => t.type === "kamaai").reduce((sum, t) => sum + t.amount, 0),
-                profit: transactions.filter(t => t.type === "kamaai").reduce((sum, t) => sum + t.amount, 0) - 
-                        transactions.filter(t => t.type === "kharcha").reduce((sum, t) => sum + t.amount, 0)
-            }
-        };
-        
-        const dataStr = JSON.stringify(exportData, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = `hisaab_kitaab_pk_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-        
-        showToast("Data exported successfully");
-    }
-    
-    function showToast(message) {
-        const existingToast = document.querySelector('.toast');
-        if (existingToast) existingToast.remove();
-        
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 2000);
-    }
-    
-    let currentType = "kharcha";
-    
-    function setActiveType(type) {
-        currentType = type;
-        document.querySelectorAll(".type-btn").forEach(btn => {
-            const btnType = btn.getAttribute("data-type");
-            if (btnType === type) {
-                btn.classList.add("active");
-            } else {
-                btn.classList.remove("active");
-            }
-        });
-    }
-    
-    function init() {
-        loadData();
-        
-        document.querySelectorAll(".type-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const type = btn.getAttribute("data-type");
-                setActiveType(type);
-            });
-        });
-        
-        document.getElementById("addEntryBtn").addEventListener("click", () => {
-            const amount = document.getElementById("amountInput").value;
-            const datetime = document.getElementById("datetimeInput").value;
-            if (addTransaction(amount, currentType, datetime)) {
-                document.getElementById("amountInput").value = "";
-                // Keep the current auto datetime
-                document.getElementById("amountInput").focus();
-            }
-        });
-        
-        document.getElementById("clearAllBtn").addEventListener("click", clearAllData);
-        document.getElementById("exportBtn").addEventListener("click", exportData);
-        
-        setActiveType("kharcha");
-        renderTransactions();
-        
-        // Handle keyboard enter on amount input
-        document.getElementById("amountInput").addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                document.getElementById("addEntryBtn").click();
-            }
-        });
-    }
-    
-    init();
+let entries   = JSON.parse(localStorage.getItem('hisaabEntries')||'[]');
+let curType   = 'K';
+let curFilter = 'all';
+let editId    = null;
+let mType     = 'K';
+
+/* ─── LIVE CLOCK ─── */
+function tick(){
+  const n   = new Date();
+  const hh  = String(n.getHours()).padStart(2,'0');
+  const mm  = String(n.getMinutes()).padStart(2,'0');
+  const ss  = String(n.getSeconds()).padStart(2,'0');
+  const ts  = `${hh}:${mm}:${ss}`;
+  const ds  = n.toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'});
+  const ds2 = n.toLocaleDateString('en-PK',{day:'2-digit',month:'short'});
+
+  document.getElementById('cTime').textContent    = ts;
+  document.getElementById('cDate').textContent    = ds;
+  document.getElementById('badgeTime').textContent= ts;
+  document.getElementById('pillTime').textContent = ts;
+  document.getElementById('pillDate').textContent = ds2;
+}
+tick(); setInterval(tick, 1000);
+
+/* ─── TYPE SELECT ─── */
+function selType(t){
+  curType = t;
+  document.getElementById('tbK').className = 'tb'+(t==='K'?' on-K':'');
+  document.getElementById('tbX').className = 'tb'+(t==='X'?' on-X':'');
+  document.getElementById('amtBox').className = 'amt-box '+(t==='K'?'gK':'gX');
+  document.getElementById('formWrap').className = 'form-wrap '+(t==='K'?'gK':'gX');
+  const btn = document.getElementById('addBtn');
+  btn.textContent = t==='K' ? '+ Kamaai Add Karein' : '+ Kharcha Add Karein';
+  btn.className   = t==='K' ? 'add-btn Ks' : 'add-btn Xs';
+}
+
+/* ─── ADD ENTRY (auto stamps date & time) ─── */
+function addEntry(){
+  const amt = parseFloat(document.getElementById('aInp').value);
+  if(!amt||amt<=0){ toast('⚠️ Sahi amount daalen!'); document.getElementById('aInp').focus(); return; }
+
+  const now     = new Date();
+  const isoDate = now.toISOString().split('T')[0];
+  const dDisp   = now.toLocaleDateString('en-PK',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  const tStr    = String(now.getHours()).padStart(2,'0')+':'+
+                  String(now.getMinutes()).padStart(2,'0')+':'+
+                  String(now.getSeconds()).padStart(2,'0');
+
+  entries.unshift({id:Date.now(), type:curType, amount:amt, date:isoDate, dateDisp:dDisp, time:tStr});
+  save();
+
+  document.getElementById('aInp').value = '';
+  document.getElementById('aInp').focus();
+  document.getElementById('histArea').scrollTo({top:0, behavior:'smooth'});
+
+  toast(curType==='K' ? '✅ Kamaai add ho gayi! 💚' : '✅ Kharcha add ho gaya! ❤️');
+}
+
+/* ─── DELETE ─── */
+function del(id){
+  entries = entries.filter(e=>e.id!==id);
+  save(); toast('🗑️ Entry mita di!');
+}
+
+/* ─── EDIT ─── */
+function openEdit(id){
+  const e = entries.find(x=>x.id===id); if(!e)return;
+  editId = id;
+  document.getElementById('meAmt').value = e.amount;
+  document.getElementById('meDt').value  = e.date;
+  document.getElementById('meTm').value  = (e.time||'').slice(0,5);
+  setMT(e.type);
+  document.getElementById('editBg').classList.add('open');
+}
+function setMT(t){
+  mType=t;
+  document.getElementById('meK').className='mtb'+(t==='K'?' on K':'');
+  document.getElementById('meX').className='mtb'+(t==='X'?' on X':'');
+}
+function saveEdit(){
+  const amt = parseFloat(document.getElementById('meAmt').value);
+  const dt  = document.getElementById('meDt').value;
+  const tm  = document.getElementById('meTm').value;
+  if(!amt||amt<=0){toast('⚠️ Sahi amount daalen!');return;}
+  if(!dt){toast('⚠️ Date chunein!');return;}
+  const dDisp = new Date(dt+'T00:00').toLocaleDateString('en-PK',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  entries = entries.map(e=>e.id===editId
+    ? {...e, type:mType, amount:amt, date:dt, dateDisp:dDisp, time:(tm||'--:--')+':00'}
+    : e);
+  save(); closeModal(); toast('✅ Entry update ho gayi!');
+}
+function closeModal(){document.getElementById('editBg').classList.remove('open');editId=null;}
+function bgClick(ev){if(ev.target===document.getElementById('editBg'))closeModal();}
+
+/* ─── FILTER ─── */
+function setF(f,btn){
+  curFilter=f;
+  document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on','xon'));
+  btn.classList.add(f==='X'?'xon':'on');
+  renderEntries();
+}
+function getFiltered(){
+  const td=new Date().toISOString().split('T')[0];
+  const wa=new Date(); wa.setDate(wa.getDate()-7);
+  return entries.filter(e=>{
+    if(curFilter==='K')    return e.type==='K';
+    if(curFilter==='X')    return e.type==='X';
+    if(curFilter==='today')return e.date===td;
+    if(curFilter==='week') return new Date(e.date)>=wa;
+    return true;
+  });
+}
+
+/* ─── CLEAR ─── */
+function clearAll(){
+  if(!entries.length){toast('ℹ️ Koi entry nahi hai!');return;}
+  if(confirm('Sari entries mita dein?\nYeh wapas nahi aayegi!')){
+    entries=[]; save(); toast('🗑️ Sab mita diya!');
+  }
+}
+
+/* ─── SAVE & RENDER ─── */
+function save(){localStorage.setItem('hisaabEntries',JSON.stringify(entries));render();}
+function render(){renderSummary();renderEntries();}
+
+function fmt(n){
+  if(n>=10000000)return '₨'+(n/10000000).toFixed(1)+'Cr';
+  if(n>=100000)  return '₨'+(n/100000).toFixed(1)+'L';
+  if(n>=1000)    return '₨'+(n/1000).toFixed(1)+'k';
+  return '₨'+n.toLocaleString('en-PK');
+}
+function fmtF(n){return '₨'+n.toLocaleString('en-PK');}
+
+function renderSummary(){
+  const k=entries.filter(e=>e.type==='K').reduce((s,e)=>s+e.amount,0);
+  const x=entries.filter(e=>e.type==='X').reduce((s,e)=>s+e.amount,0);
+  const p=k-x;
+  document.getElementById('totK').textContent=fmt(k);
+  document.getElementById('totX').textContent=fmt(x);
+  const pEl=document.getElementById('totP');
+  pEl.textContent=fmt(Math.abs(p));
+  pEl.className='sc-val'+(p<0?' loss':'');
+  document.getElementById('pbAmt').textContent=fmtF(Math.abs(p));
+  document.getElementById('pbAmt').className='pb-amt'+(p<0?' loss':'');
+  if(p>0){
+    document.getElementById('pbIco').textContent='🎉';
+    document.getElementById('pbNote').textContent='Mubarak! Aaj ka munafa: '+fmtF(p);
+  }else if(p<0){
+    document.getElementById('pbIco').textContent='⚠️';
+    document.getElementById('pbNote').textContent='Nuqsaan: Kharcha '+fmtF(Math.abs(p))+' zyada hai';
+  }else{
+    document.getElementById('pbIco').textContent='⚖️';
+    document.getElementById('pbNote').textContent='Kamaai − Kharcha = Munafa';
+  }
+}
+
+function renderEntries(){
+  const list=document.getElementById('eList');
+  const filt=getFiltered();
+  document.getElementById('cntBadge').textContent=filt.length;
+
+  if(!filt.length){
+    list.innerHTML='<div class="empty"><div class="ei">📒</div><p>Koi entry nahi mili.<br>Upar se entry add karein!</p></div>';
+    return;
+  }
+
+  const groups={};
+  filt.forEach(e=>{(groups[e.date]=groups[e.date]||[]).push(e);});
+  const dates=Object.keys(groups).sort((a,b)=>b.localeCompare(a));
+  const td=new Date().toISOString().split('T')[0];
+  const yd=new Date(Date.now()-86400000).toISOString().split('T')[0];
+
+  list.innerHTML=dates.map(date=>{
+    const dg=groups[date];
+    const dk=dg.filter(e=>e.type==='K').reduce((s,e)=>s+e.amount,0);
+    const dx=dg.filter(e=>e.type==='X').reduce((s,e)=>s+e.amount,0);
+    const dn=dk-dx;
+    const lbl=date===td?'📅 Aaj':date===yd?'🕐 Kal':
+      '📆 '+new Date(date+'T00:00').toLocaleDateString('en-PK',{weekday:'short',day:'numeric',month:'short'});
+    const netSpan=dn>=0
+      ?`<span class="dg-net" style="color:var(--K)">+${fmtF(dn)}</span>`
+      :`<span class="dg-net" style="color:var(--X)">${fmtF(dn)}</span>`;
+
+    const cards=dg.map(e=>`
+      <div class="ecard ${e.type}">
+        <div class="eico">${e.type==='K'?'💚':'❤️'}</div>
+        <div class="ebody">
+          <div class="emeta">⏱ ${e.time||'--:--'} &nbsp;|&nbsp; 📅 ${e.dateDisp||e.date}</div>
+          <span class="ebadge">${e.type==='K'?'Kamaai':'Kharcha'}</span>
+        </div>
+        <div class="eright">
+          <div class="eamt">${e.type==='X'?'−':'+'}${fmtF(e.amount)}</div>
+          <div class="ebtn-row">
+            <button class="ebtn" onclick="openEdit(${e.id})" title="Edit">✏️</button>
+            <button class="ebtn" onclick="del(${e.id})" title="Delete">🗑️</button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    return `<div class="dg">
+      <div class="dg-hdr"><div class="dg-lbl">${lbl}</div><div class="dg-line"></div>${netSpan}</div>
+      ${cards}
+    </div>`;
+  }).join('');
+}
+
+/* keyboard */
+document.getElementById('aInp').addEventListener('keydown',e=>{if(e.key==='Enter')addEntry();});
+document.getElementById('meAmt').addEventListener('keydown',e=>{if(e.key==='Enter')saveEdit();});
+
+render();
 </script>
 </body>
 </html>
