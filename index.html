@@ -437,6 +437,8 @@ function selType(t){
   const btn = document.getElementById('addBtn');
   btn.textContent = t==='K' ? '+ Kamaai Add Karein' : '+ Kharcha Add Karein';
   btn.className   = t==='K' ? 'add-btn Ks' : 'add-btn Xs';
+  // slide form to top and focus amount input
+  slideFormUp();
 }
 
 /* ─── ADD ENTRY (auto stamps date & time) ─── */
@@ -611,26 +613,41 @@ function renderEntries(){
 
 /* keyboard */
 document.getElementById('aInp').addEventListener('keydown',e=>{if(e.key==='Enter')addEntry();});
+document.getElementById('aInp').addEventListener('focus', slideFormUp);
 document.getElementById('meAmt').addEventListener('keydown',e=>{if(e.key==='Enter')saveEdit();});
 
-/* ── When amount box is tapped: slide the whole top-fixed block UP
-   so the "Naya Entry" form sits right at the top of the screen ── */
-document.getElementById('aInp').addEventListener('focus', () => {
-  const topFixed  = document.querySelector('.top-fixed');
-  const formWrap  = document.getElementById('formWrap');
-  // how far the top of formWrap is from the top of the viewport
-  const offset = formWrap.getBoundingClientRect().top;
-  // slide top-fixed up by that amount (minus a small padding)
-  const slideUp = offset - 8;
-  topFixed.style.setProperty('--slide-up', `-${slideUp}px`);
-  topFixed.classList.add('form-up');
-});
+/* ── Form slide logic ── */
+let formIsUp = false;
 
-/* Slide back down when user leaves the amount input */
-document.getElementById('aInp').addEventListener('blur', () => {
+function slideFormUp(){
+  if(formIsUp) {
+    // already up — just re-focus amount without re-measuring
+    document.getElementById('aInp').focus();
+    return;
+  }
   const topFixed = document.querySelector('.top-fixed');
-  topFixed.classList.remove('form-up');
+  const formWrap = document.getElementById('formWrap');
+  const offset   = formWrap.getBoundingClientRect().top;
+  topFixed.style.setProperty('--slide-up', `-${Math.max(0, offset - 8)}px`);
+  topFixed.classList.add('form-up');
+  formIsUp = true;
+  setTimeout(() => document.getElementById('aInp').focus(), 50);
+}
+
+function slideFormDown(){
+  document.querySelector('.top-fixed').classList.remove('form-up');
+  formIsUp = false;
+}
+
+/* Only slide down when clicking OUTSIDE the entire top-fixed zone */
+document.addEventListener('mousedown', e => {
+  const topFixed = document.querySelector('.top-fixed');
+  if(formIsUp && !topFixed.contains(e.target)) slideFormDown();
 });
+document.addEventListener('touchstart', e => {
+  const topFixed = document.querySelector('.top-fixed');
+  if(formIsUp && !topFixed.contains(e.target)) slideFormDown();
+}, {passive:true});
 
 render();
 </script>
