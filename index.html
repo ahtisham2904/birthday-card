@@ -614,23 +614,21 @@ function renderEntries(){
 /* keyboard */
 document.getElementById('aInp').addEventListener('keydown',e=>{if(e.key==='Enter')addEntry();});
 document.getElementById('aInp').addEventListener('focus', slideFormUp);
+document.getElementById('aInp').addEventListener('touchstart', slideFormUp, {passive:true});
 document.getElementById('meAmt').addEventListener('keydown',e=>{if(e.key==='Enter')saveEdit();});
 
 /* ── Form slide logic ── */
 let formIsUp = false;
 
 function slideFormUp(){
-  if(formIsUp) {
-    // already up — just re-focus amount without re-measuring
-    document.getElementById('aInp').focus();
-    return;
-  }
   const topFixed = document.querySelector('.top-fixed');
   const formWrap = document.getElementById('formWrap');
-  const offset   = formWrap.getBoundingClientRect().top;
-  topFixed.style.setProperty('--slide-up', `-${Math.max(0, offset - 8)}px`);
-  topFixed.classList.add('form-up');
-  formIsUp = true;
+  if(!formIsUp){
+    const offset = formWrap.getBoundingClientRect().top;
+    topFixed.style.setProperty('--slide-up', `-${Math.max(0, offset - 8)}px`);
+    topFixed.classList.add('form-up');
+    formIsUp = true;
+  }
   setTimeout(() => document.getElementById('aInp').focus(), 50);
 }
 
@@ -639,7 +637,7 @@ function slideFormDown(){
   formIsUp = false;
 }
 
-/* Only slide down when clicking OUTSIDE the entire top-fixed zone */
+/* Only slide down when tapping OUTSIDE the entire top-fixed zone */
 document.addEventListener('mousedown', e => {
   const topFixed = document.querySelector('.top-fixed');
   if(formIsUp && !topFixed.contains(e.target)) slideFormDown();
@@ -648,6 +646,10 @@ document.addEventListener('touchstart', e => {
   const topFixed = document.querySelector('.top-fixed');
   if(formIsUp && !topFixed.contains(e.target)) slideFormDown();
 }, {passive:true});
+
+/* Mobile: touchstart on type buttons */
+document.getElementById('tbK').addEventListener('touchstart', slideFormUp, {passive:true});
+document.getElementById('tbX').addEventListener('touchstart', slideFormUp, {passive:true});
 
 render();
 </script>
